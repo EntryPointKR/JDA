@@ -2313,6 +2313,40 @@ public class GuildController
         return new RoleOrderAction(guild, useDiscordOrder);
     }
 
+    @CheckReturnValue
+    public RestAction<MessageSearchResult> searchMessage(String authorId, int offset) {
+        Route.CompiledRoute route = Route.Guilds.SEARCH_MESSAGE.compile(guild.getId())
+            .withQueryParams("author_id", authorId)
+            .withQueryParams("offset", String.valueOf(offset));
+
+        return new RestAction<MessageSearchResult>(guild.getJDA(), route) {
+            @Override
+            protected void handleResponse(Response response, Request<MessageSearchResult> request) {
+                if (response.isOk()) {
+                    JSONObject responseJson = response.getObject();
+                    request.onSuccess(api.getEntityBuilder().createMessageSearchResult(responseJson));
+                } else {
+                    request.onFailure(response);
+                }
+            }
+        };
+    }
+
+    @CheckReturnValue
+    public RestAction<MessageSearchResult> searchMessage(String authorId) {
+        return searchMessage(authorId, 0);
+    }
+
+    @CheckReturnValue
+    public RestAction<MessageSearchResult> searchMessage(User user, int offset) {
+        return searchMessage(user.getId(), offset);
+    }
+
+    @CheckReturnValue
+    public RestAction<MessageSearchResult> searchMessage(User user) {
+        return searchMessage(user, 0);
+    }
+
     protected void checkAvailable()
     {
         if (!guild.isAvailable())

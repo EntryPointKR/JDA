@@ -57,7 +57,7 @@ public class Route
         public static final Route GET_AUTHORIZED_APPLICATION =    new Route(GET,    "oauth2/tokens/{auth_id}");
         public static final Route DELETE_AUTHORIZED_APPLICATION = new Route(DELETE, "oauth2/tokens/{auth_id}");
     }
-    
+
     public static class Self
     {
         public static final Route GET_SELF =               new Route(GET,    "users/@me");
@@ -123,6 +123,8 @@ public class Route
 
         public static final Route ADD_MEMBER_ROLE =    new Route(PUT,    "guilds/{guild_id}/members/{user_id}/roles/{role_id}",  "guild_id");
         public static final Route REMOVE_MEMBER_ROLE = new Route(DELETE, "guilds/{guild_id}/members/{user_id}/roles/{role_id}",  "guild_id");
+
+        public static final Route SEARCH_MESSAGE = new Route(GET, "guilds/{guild_id}/messages/search", "guild_id");
 
 
         //Client Only
@@ -375,7 +377,7 @@ public class Route
         private final Route baseRoute;
         private final String ratelimitRoute;
         private final String compiledRoute;
-        private final boolean hasQueryParams; 
+        private final boolean hasQueryParams;
 
         private CompiledRoute(Route baseRoute, String ratelimitRoute, String compiledRoute, boolean hasQueryParams)
         {
@@ -446,7 +448,7 @@ public class Route
             return "CompiledRoute(" + method + ": " + compiledRoute + ")";
         }
     }
-    
+
     public static class RateLimit
     {
         final int usageLimit;

@@ -1403,6 +1403,22 @@ public class EntityBuilder
         return new AuditLogChange(oldValue, newValue, key);
     }
 
+    public MessageSearchResult createMessageSearchResult(JSONObject json) {
+        String analyticsId = json.getString("analytics_id");
+        int totalResults = json.getInt("total_results");
+        List<Message> messages = new ArrayList<>();
+
+        JSONArray array = json.getJSONArray("messages");
+        for (Object object : array) {
+            if (object instanceof JSONArray) {
+                JSONArray messageArray = ((JSONArray) object);
+                messageArray.forEach(message -> messages.add(createMessage((JSONObject) message)));
+            }
+        }
+
+        return new MessageSearchResult(analyticsId, totalResults, messages);
+    }
+
     private Map<String, AuditLogChange> changeToMap(Set<AuditLogChange> changesList)
     {
         return changesList.stream().collect(Collectors.toMap(AuditLogChange::getKey, UnaryOperator.identity()));
